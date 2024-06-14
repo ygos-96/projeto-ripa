@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Imagem</title>
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/variaveis.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsivo.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--cor-background) !important;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .upload-container {
+            width: 539px;
+            margin: 50px auto;
+            text-align: center;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .upload-container h1 {
+            color: var(--cor-contraste);
+            font-family: 'Darkmode', sans-serif;
+            font-size: 64px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .tempo{
+            display: flex;
+            text-align: start;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .cartao-upload {
+            text-align: center;
+            border: 2px dashed #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 250px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .cartao-upload h2 {
+            margin-top: 0;
+        }
+
+        .upload-text {
+            color: #ff0000;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .file-name {
+            margin-bottom: 10px;
+        }
+
+        progress {
+            width: 100%;
+            height: 20px;
+            appearance: none;
+            border: none;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: transparent;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: var(--progress-color);
+            border-radius: 10px;
+        }
+
+        progress::-moz-progress-bar {
+            background-color: var(--progress-color);
+            border-radius: 10px;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .terms {
+            margin-top: 20px;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .remove-button {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="upload-container">
+        <h1>ripa nas tattoo</h1>
+        <form id="uploadForm">
+            <label class="label-form">Nome</label>
+            <input type="text" class="input-form">
+            <label class="label-form">Instagram</label>
+            <input type="text" class="input-form">
+            <label class="label-form">Você tatua a quanto tempo?</label>
+
+            <div class="tempo">
+                
+                <input type="number" class="input-form">
+                <select name="unidade" id="unidade" style="flex: 2;">
+                    <option value="Selecione">Selecione</option>
+                    <option value="anos">Anos</option>
+                    <option value="meses">Meses</option>
+                </select>
+            </div>
+
+            <!-- Novo código de upload de imagem -->
+            <div class="cartao-upload" id="uploadCard">
+                <img src="assets/midia/carregar.png" class="img-carregar" alt="">
+                <h2>Arraste e solte as imagens ou <span class="upload-text">pesquise</span></h2>
+                <input type="file" id="fileInput" style="display: none;" multiple>
+                <p>Formatos aceitos: JPEG, PNG, JPG, HEIC</p>
+            </div>
+
+            <div id="progressContainer" class="progress-container">
+                <div id="fileName" class="file-name"></div>
+                <progress id="progressBar" value="0" max="100"></progress>
+                <div id="statusMessage" class="status-message">Carregando...</div>
+                <button type="button" id="removeButton" class="remove-button">Remover</button>
+            </div>
+
+            <div class="terms">
+                <input type="checkbox" id="termsCheckbox">
+                <label for="termsCheckbox">Eu li e concordo com os termos de uso</label>
+            </div>
+            <button id="submitButton" disabled>SUBMETER FORMULÁRIO</button>
+        </form>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const fileInput = document.getElementById('fileInput');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const fileName = document.getElementById('fileName');
+            const statusMessage = document.getElementById('statusMessage');
+            const removeButton = document.getElementById('removeButton');
+            const termsCheckbox = document.getElementById("termsCheckbox");
+            const submitButton = document.getElementById("submitButton");
+            const nameInput = document.getElementById("name");
+            const instagramInput = document.getElementById("instagram");
+            const wantTattooSelect = document.getElementById("wantTattoo");
+            const quantitySelect = document.getElementById("quantity");
+            const uploadCard = document.getElementById('uploadCard');
+
+            // Abrir o seletor de arquivos ao clicar no cartão de upload
+            uploadCard.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Função para lidar com arrastar e soltar
+            uploadCard.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadCard.style.borderColor = 'green';
+            });
+
+            uploadCard.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadCard.style.borderColor = '#fff';
+            });
+
+            uploadCard.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadCard.style.borderColor = '#fff';
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+                checkFormCompletion();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const files = e.target.files;
+                handleFiles(files);
+                checkFormCompletion();
+            });
+
+            removeButton.addEventListener('click', () => {
+                fileInput.value = '';
+                fileName.textContent = '';
+                progressBar.value = 0;
+                statusMessage.textContent = '';
+                progressContainer.style.display = 'none';
+                checkFormCompletion();
+            });
+
+            function handleFiles(files) {
+                progressContainer.style.display = 'block';
+                const file = files[0];
+                fileName.textContent = file.name;
+                statusMessage.textContent = "Carregando...";
+
+                // Simulação de upload lento
+                let percentComplete = 0;
+                progressBar.value = percentComplete;
+
+                const interval = setInterval(() => {
+                    percentComplete += 1;
+                    progressBar.value = percentComplete;
+
+                    if (percentComplete < 50) {
+                        progressBar.style.setProperty('--progress-color', '#ff0000');
+                    } else if (percentComplete < 100) {
+                        progressBar.style.setProperty('--progress-color', '#ffa500');
+                    } else {
+                        progressBar.style.setProperty('--progress-color', '#008000');
+                        clearInterval(interval);
+                        statusMessage.textContent = "Carregado";
+                        console.log('Upload concluído');
+                    }
+                }, 50); // Ajuste o tempo do intervalo para controlar a velocidade do upload
+            }
+
+            function checkFormCompletion() {
+                if (termsCheckbox.checked &&
+                    nameInput.value.trim() !== "" &&
+                    instagramInput.value.trim() !== "" &&
+                    wantTattooSelect.value !== "" &&
+                    quantitySelect.value !== "" &&
+                    fileInput.files.length > 0) {
+                    submitButton.disabled = false;
+                } else {
+                    submitButton.disabled = true;
+                }
+            }
+
+            termsCheckbox.addEventListener("change", checkFormCompletion);
+            nameInput.addEventListener("input", checkFormCompletion);
+            instagramInput.addEventListener("input", checkFormCompletion);
+            wantTattooSelect.addEventListener("change", checkFormCompletion);
+            quantitySelect.addEventListener("change", checkFormCompletion);
+        });
+
+    </script>
+</body>
+
+</html>

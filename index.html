@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/variaveis.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsivo.css">
+    <title>Document</title>
+</head>
+<body>
+    <main class="conteudo">
+           <h1 class="titulo">ripa nas tattoo</h1>
+
+           <form class="formulario">
+            <label class="label-form">Nome</label>
+            <input type="text" class="input-form" placeholder="Informe seu nome">
+            <label class="label-form">Instagram</label>
+            <input type="text" class="input-form" placeholder="@exemplo">
+            <label class="label-form">Você tatua a quanto tempo?</label>
+
+            <div class="tempo">
+                <input type="number" class="input-form">
+                <select name="unidade" id="unidade">
+                    <option value="selecione">Selecione</option>
+                    <option value="anos">Anos</option>
+                    <option value="meses">Meses</option>
+                    <option value="dias">Dias</option>
+                </select>
+            </div>
+
+
+            <div class="cartao-upload" id="cartaoUpload">
+                <img src="assets/midia/carregar.png" class="img-carregar" alt="imagem que indica a possibilidade de carregar uma imagem">
+                <h2>Arraste e solte as imagens ou <span class="span-carregar upload-texto">pesquise</span></h2>
+                <input type="file" id="fileInput" class="file-Input" multiple>
+                <p>Formatos aceitos: JPEG, PNG, JPG, HEIC</p>
+            </div>
+
+            <div id="progressoBarra" class="progresso-barra">
+                <div id="fileName" class="file-name"></div>
+                <progress id="progressBar" value="0" max="100"></progress>
+                <div id="statusDaMensagem" class="status-da-mensagem">Carregando...</div>
+                <button type="button" id="removeButton" class="botao-remover"></button>
+            </div>
+
+
+
+           </form>
+
+    </main>
+</body>
+</html>
